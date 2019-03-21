@@ -71,22 +71,26 @@ namespace Eng24SeleniumSpecflow
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Invalid password")]
-        public virtual void InvalidPassword()
+        [NUnit.Framework.TestCaseAttribute("user@testing.com", "12345678", "Sorry, that password isn\'t valid. Please include a letter.", null)]
+        [NUnit.Framework.TestCaseAttribute("user@testing.com", "123", "Sorry, that password is too short. It needs to be eight characters or more.", null)]
+        [NUnit.Framework.TestCaseAttribute("user@testing.com", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Sorry, that password is too long. It can\'t be more than 50 characters.", null)]
+        [NUnit.Framework.TestCaseAttribute("user@testing.com", "", "Something\'s missing. Please check and try again.", null)]
+        public virtual void InvalidPassword(string username, string password, string error, string[] exampleTags)
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Invalid password", null, ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Invalid password", null, exampleTags);
 #line 6
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 7
  testRunner.Given("I am on the login page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 8
- testRunner.And("I have entered a valid username", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And(string.Format("I have entered a valid {0}", username), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 9
- testRunner.And("I have entered an invalid password", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And(string.Format("I have entered an invalid {0}", password), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 10
  testRunner.When("I press login", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 11
- testRunner.Then("I should see the appropriate error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then(string.Format("I should see the appropriate {0}", error), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

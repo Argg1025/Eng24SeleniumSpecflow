@@ -9,43 +9,47 @@ namespace Eng24SeleniumSpecflow
     [Binding]
     public class BBcLoginSteps
     {
-        private IWebDriver driver; 
+        private IWebDriver _driver;
+        private BBCLoginPage _bbcLoginPage;
+
+
         [Given(@"I am on the login page")]
         public void GivenIAmOnTheLoginPage()
         {
-            driver = new ChromeDriver();
-            driver.Manage().Window.Maximize();
-            driver.Navigate().GoToUrl("http://bbc.co.uk");
-            IWebElement loginButton = driver.FindElement(By.Id("idcta-link"));
-            loginButton.Click();
+            _driver = new ChromeDriver();
+            _driver.Manage().Window.Maximize();
+            _bbcLoginPage = BBCLoginPage.NavigateTo(_driver);
+
         }
         
-        [Given(@"I have entered a valid username")]
-        public void GivenIHaveEnteredAValidUsername()
+        [Given(@"I have entered a valid (.*)")]
+        public void GivenIHaveEnteredAValidUsername(string username)
         {
-            IWebElement usernameField = driver.FindElement(By.Id("user-identifier-input"));
-            usernameField.SendKeys("testing@goddard.com");
+            _bbcLoginPage.Username = username;
         }
         
-        [Given(@"I have entered an invalid password")]
-        public void GivenIHaveEnteredAnInvalidPassword()
+        [Given(@"I have entered an invalid (.*)")]
+        public void GivenIHaveEnteredAnInvalidPassword(string password)
         {
-            IWebElement passwordField = driver.FindElement(By.Id("password-input"));
-            passwordField.SendKeys("12345678");
+            _bbcLoginPage.Password = password;
         }
         
         [When(@"I press login")]
         public void WhenIPressLogin()
         {
-            IWebElement submitButton = driver.FindElement(By.Id("submit-button"));
-            submitButton.Click();
+            _bbcLoginPage.ClickSigninButtton();
         }
         
-        [Then(@"I should see the appropriate error")]
-        public void ThenIShouldSeeTheAppropriateError()
+        [Then(@"I should see the appropriate (.*)")]
+        public void ThenIShouldSeeTheAppropriateError(string error)
+        { 
+            Assert.AreEqual(error, _bbcLoginPage.ErrorText);
+        }
+
+        [AfterScenario]
+        public void DisposeWebDriver()
         {
-            IWebElement passwordError = driver.FindElement(By.Id("form-message-password"));
-            Assert.AreEqual("Sorry, that password isn't valid. Please include a letter.", passwordError.Text);
+            _driver.Dispose();
         }
     }
 }
